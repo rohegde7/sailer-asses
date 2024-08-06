@@ -46,9 +46,8 @@ public class UrlServiceImpl implements UrlService {
 
     @Override
     public String resolveShortenedUrl(String shortUrl) throws UrlNotFoundException {
-        ShortenedUrl shortenedUrl = shortenedUrlRepository.findByShortUrl(shortUrl);
+        ShortenedUrl shortenedUrl = shortenedUrlRepository.findByShortUrl(shortUrl).orElseThrow(() -> new UrlNotFoundException("Url not found"));
 
-        if (shortenedUrl == null) throw new UrlNotFoundException("URL not found");
         if (shortenedUrl.getExpiresAt() < Calendar.getInstance().getTimeInMillis())
             throw new RuntimeException("Link expired");
 
